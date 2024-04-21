@@ -11,3 +11,5 @@ x64/
 *.pypirc
 *setup.py
 *PKG-INFO*
+
+**/dlsim_te.py

@@ -2,21 +2,20 @@ import os
 from types import SimpleNamespace
 import pandas as pd
 
+from pyufunc import (func_running_time,
+                     path2linux,
+                     get_filenames_by_ext,
+                     )
+
 # load user defined functions
 try:
     from func_lib import (load_cpp_shared_library,
                           check_required_files_exist,
-                          get_filenames_from_folder_by_type,
-                          func_running_time,
-                          path2linux
                           )
 
 except Exception:
     from .func_lib import (load_cpp_shared_library,
                            check_required_files_exist,
-                           get_filenames_from_folder_by_type,
-                           func_running_time,
-                           path2linux
                            )
 
 
@@ -75,7 +74,7 @@ class DLSim:
             >>> DL.check_working_directory("C:\\Users\\luoxiangyong\\Desktop\\DLSim\\test")
                 Current working directory: C:\\Users\\luoxiangyong\\Desktop\\DLSim\\test
         """
-        # prepare stardardard cross-platform path
+        # prepare standard cross-platform path
         working_dir = path2linux(working_dir)
 
         # change the working directory to the user specified working directory
@@ -103,11 +102,11 @@ class DLSim:
             Please prepare missing files and put them in the working directory
         """
 
-        files_in_working_dir = get_filenames_from_folder_by_type(self.DLSim_WORKING_DIR, "csv")
+        files_in_working_dir = get_filenames_by_ext(self.DLSim_WORKING_DIR, "csv")
 
-        isRequiredFilesExist = check_required_files_exist(self.DLSim_required_inputs, files_in_working_dir)
-
-        if isRequiredFilesExist:
+        if isRequiredFilesExist := check_required_files_exist(
+            self.DLSim_required_inputs, files_in_working_dir
+        ):
             print(f"All the required files {self.DLSim_required_inputs} in the working directory.")
         else:
             print(f"Please prepare missing files and put them in the working directory: {self.DLSim_WORKING_DIR}.")
@@ -181,25 +180,3 @@ class DLSim:
             f'check link_performance.csv in {os.getcwd()} for link performance\n'
             f'check agent.csv in {os.getcwd()} for unique agent paths\n'
         )
-
-if __name__ == "__main__":
-
-    # load the DLSim class
-    DL = DLSim()
-
-    path_test = r"C:\Users\roche\Anaconda_workspace\001_Github\DLSim-MRM\datasets\ASU"
-
-    # check the working directory
-    DL.check_working_directory()
-
-    # check all the required files exist
-    DL.check_DLSim_input_files()
-
-    # load and update settings
-    DL.DLSim_settings
-
-    # user can change setting parameters here
-    DL.setting.time_period = "0700_0800"
-
-    # perform kernel network assignment simulation
-    DL.perform_kernel_network_assignment_simulation()

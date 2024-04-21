@@ -11,55 +11,7 @@ from pathlib import Path
 from typing import Union  # Python version <= 3.9
 import ctypes
 import platform
-
-
-# A decorator to measure the time of a function
-def func_running_time(func):
-    def inner(*args, **kwargs):
-        print(f'INFO Begin to run function: {func.__name__} …')
-        time_start = datetime.datetime.now()
-        res = func(*args, **kwargs)
-        time_diff = datetime.datetime.now() - time_start
-        print(
-            f'INFO Finished running function: {func.__name__}, total: {time_diff.seconds}s')
-        print()
-        return res
-    return inner
-
-
-# convert OS path to standard linux path
-def path2linux(path: Union[str, Path]) -> str:
-    """Convert a path to a linux path, linux path can run in windows, linux and mac"""
-    try:
-        return path.replace("\\", "/")
-    except Exception:
-        return str(path).replace("\\", "/")
-
-
-def get_filenames_from_folder_by_type(dir_name: str, file_type: str = "txt", isTraverseSubdirectory: bool = False) -> list:
-    """Get all files in the folder with the specified file type
-
-    Args:
-        dir_name (str)                         : the folder path
-        file_type (str, optional)              : the exact file type to specify, if file_type is "*" or "all", return all files in the folder. Defaults to "txt".
-        isTraverseSubdirectory (bool, optional): get files inside the subfolder or not, if True, will traverse all subfolders. Defaults to False.
-
-    Returns:
-        list: a list of file paths
-    """
-
-    if isTraverseSubdirectory:
-        files_list = []
-        for root, dirs, files in os.walk(dir_name):
-            files_list.extend([os.path.join(root, file) for file in files])
-        if file_type in {"*", "all"}:
-            return [path2linux(file) for file in files_list]
-        return [path2linux(file) for file in files_list if file.split(".")[-1] == file_type]
-    print("input dir:", dir_name, "\ninput file type", file_type)
-    # files in the first layer of the folder
-    if file_type in {"*", "all"}:
-        return [path2linux(os.path.join(dir_name, file)) for file in os.listdir(dir_name)]
-    return [path2linux(os.path.join(dir_name, file)) for file in os.listdir(dir_name) if file.split(".")[-1] == file_type]
+from pyufunc import path2linux
 
 
 def check_required_files_exist(required_files: list, dir_files: list) -> bool:
@@ -93,7 +45,7 @@ def load_cpp_shared_library():
         else:
             _dtalite_dll = os.path.join(os.path.dirname(__file__), 'pydtalite_bin/DTALite_arm.dylib')
     else:
-        raise Exception('Please build the shared library compatible to your OS\
+        raise Exception('Please build the shared library compatible to your OS \
                         using source files')
 
     _dtalite_engine = ctypes.cdll.LoadLibrary(_dtalite_dll)
