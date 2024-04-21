@@ -5,8 +5,10 @@
 # Author/Copyright: Mr. Xiangyong Luo
 ##############################################################
 
-from ._init_api import *
+from .dtalite import DTALiteSim
+
+__all__ = ["DTALiteSim"]
 
 # Show the version of DLSim when importing the package
-__version__ = "0.2.11"
+__version__ = "0.2.12"
 print("DLSim version: " + __version__)

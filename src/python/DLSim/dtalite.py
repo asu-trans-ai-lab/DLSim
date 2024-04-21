@@ -19,10 +19,7 @@ except Exception:
                            )
 
 
-__all__ = ['DLSim']
-
-
-class DLSim:
+class DTALiteSim:
     """Perform network assignment using the selected assignment mode
 
      Parameters
