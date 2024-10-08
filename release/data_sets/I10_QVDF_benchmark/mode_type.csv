@@ -1,0 +1,2 @@
+mode_type,name,vot,pce,occ,demand_file
+sov,DRIVE,10,1,1,demand.csv
